@@ -1,4 +1,5 @@
- We have LEMP stack configured on apps and database server in Stratos DC. Its using Nginx + php-fpm,                                                                 
+#Task: 
+We have LEMP stack configured on apps and database server in Stratos DC. Its using Nginx + php-fpm,                                                                 
  for now we have deployed a sample php page on these apps. Due to some misconfiguration the php page
  is not loading on the web server. Seems like at least two app servers are having issues. 
  Find below more details and make sure website works on LBR URL and locally on each app as well.
@@ -7,3 +8,36 @@
  2. Nginx document root is /var/www/html/
  3. Test the webpage on LBR URL (use LBR button on the top bar) and locally on each app server to make 
      sure it works. It must not display any error message or nginx default page.
+#Solution:
+1) from jumpbox check the availability of web servers:
+  curl stapp01
+  curl stapp02
+  curl stapp03
+2) Start with the server stapp01:
+   sshpass -p Ir0nM@n ssh -o StrictHostKeyChecking=no tony@172.16.238.10
+   sudo su
+   vi /etc/nginx/nginx.conf
+      change listen port to 80
+  we prescribe the initial page: index.php
+   systemctl restart nginx
+  check: 
+   curl stapp01
+3) Go to server stapp02:
+    sshpass -p Am3ric@ ssh -o StrictHostKeyChecking=no steve@172.16.238.11
+    sudo su
+    vi /etc/nginx/nginx.conf
+  add (complement) ".sock"
+    systemctl restart nginx
+  check: 
+   curl stapp02
+4) Go to server stapp03:
+    sshpass -p BigGr33n ssh -o StrictHostKeyChecking=no banner@172.16.238.12
+    sudo su
+    vi /etc/nginx/nginx.conf
+   we fix the path to the parent's catalog /  : /var/www/html
+    systemctl restart nginx
+  check: 
+    curl stapp03
+I hope I didn’t forget anything))
+Done.
+    
