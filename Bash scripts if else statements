@@ -1,12 +1,35 @@
 Task:
-The Nautilus DevOps team is working on to develop a bash script to automate some tasks. As per the requirements shared with the team database related tasks needed to be automated. Below you can find more details about the same:
+The Nautilus DevOps team is working on to develop a bash script to automate some tasks. As per the requirements shared with the team database related tasks needed to be automated. Below you can find more 
+details about the same:
 
 Write a bash script named /opt/scripts/database.sh on Database Server. The mariadb database server is already installed on this server.
-
 Add code in the script to perform some database related operations as per conditions given below:
 
-a. Create a new database named kodekloud_db01. If this database already exists on the server then script should print a message Database already exists and if the database does not exist then create the same and script should print Database kodekloud_db01 has been created. Further, create a user named kodekloud_roy and set its password to asdfgdsd, also give full access to this user on newly created database (remember to use wildcard host while creating the user).
-b. Now check if the database (if it was already there) already contains some data (tables)if so then script should print 'database is not empty otherwise import the database dump /opt/db_backups/db.sql and print imported database dump into kodekloud_db01 database.
+a. Create a new database named kodekloud_db01. If this database already exists on the server then script should print a message Database already exists and if the database does not exist then create the same 
+and script should print Database kodekloud_db01 has been created. 
+Further, create a user named kodekloud_roy and set its password to asdfgdsd, also give full access to this user on newly created database (remember to use wildcard host while creating the user).
+b. Now check if the database (if it was already there) already contains some data (tables)if so then script should print 'database is not empty otherwise import the database dump /opt/db_backups/db.sql and 
+print imported database dump into kodekloud_db01 database.
 c. Take a mysql dump which should be named as kodekloud_db01.sql and save it under /opt/db_backups/ directory.
+
 Solution:
+
+#!/bin/bash
+kk_db=kodekloud_db01
+user_db=kodekloud_roy
+passw_db=asdfgdsd
+if [ -d /var/lib/mysql/kodekloud_db01 ] ; then
+    echo "Database already exists"
+      else
+       mysql -uroot  -e "CREATE DATABASE $kk_db;"
+       mysql -uroot  -e "show databases;"         
+       echo  "Database kodekloud_db01 has been created"
+fi
+mysql -uroot -e "CREATE USER IF NOT EXISTS '$user_db'@'%' IDENTIFIED BY '$passw_db'; GRANT ALL PRIVILEGES ON $kk_db.* TO '$user_db'@'%';    FLUSH PRIVILEGES;"
+cnt_db_tbl=`mysql -uroot -s --skip-column-names -e "SELECT COUNT(DISTINCT table_name) FROM information_schema.columns WHERE table_schema = '$kk_db'"`
+if    [ $cnt_db_tbl -eq 0 ]  ; then mysql -uroot $kk_db < /opt/db_backups/db.sql ;echo 'imported database dump into kodekloud_db01 database'
+  else echo 'database is not empty'
+fi
+mysqldump -uroot  $kk_db > /opt/db_backups/kodekloud_db01.sql
+ 
   
