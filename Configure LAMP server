@@ -8,3 +8,42 @@ c. Install/Configure MariaDB server on DB Server.
 d. Create a database named kodekloud_db3 and create a database user named kodekloud_aim identified as password BruCStnMT5. 
     Further make sure this newly created user is able to perform all operation on the database you created.
 e. Finally you should be able to access the website on LBR link, by clicking on the App button on the top bar.
+
+
+sshpass -p Ir0nM@n ssh -o StrictHostKeyChecking=no tony@172.16.238.10
+
+sshpass -p Am3ric@ ssh -o StrictHostKeyChecking=no steve@172.16.238.11
+
+sshpass -p BigGr33n ssh -o StrictHostKeyChecking=no banner@172.16.238.12
+
+sshpass -p Sp!dy ssh -o StrictHostKeyChecking=no peter@172.16.239.10
+
+sudo yum install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+ vi /etc/httpd/conf/httpd.conf 
+
+ sudo yum install php php-pear php-gd php-mysql
+ 
+ sudo dnf install php php-mysqlnd -y
+ 
+ sudo systemctl restart httpd
+ 
+ curl localhost:8088
+ 
+ dnf install mariadb-server -y
+ systemctl start mariadb
+ mysql_secure_installation
+ 
+ CREATE DATABASE kodekloud_db3;
+ GRANT ALL ON kodekloud_db3.* TO 'kodekloud_roy'@'localhost' IDENTIFIED BY '8FmzjvFU6S' WITH GRANT OPTION;
+ FLUSH PRIVILEGES;
+ exit
+ 
+ mysql -u kodekloud_roy -p
+ 8FmzjvFU6S
+ SHOW DATABASES;
+ exit
+ 
+ systemctl restart mariadb
